@@ -10,7 +10,7 @@ void log_error(Errors err, char* file, int line, const char* func) {
             fprintf(stderr, "%s:%d error: Index out of bounds.\n\t\t~> function:%s\n", file, line, func);
             break;
         case E_OBJECT_UNINITIALIZED:
-            fprintf(stderr, "%s:%d error: List uninitialized / destroyed.\n\t\t~> function:%s\n", file, line, func);
+            fprintf(stderr, "%s:%d error: Object uninitialized / destroyed.\n\t\t~> function:%s\n", file, line, func);
             break;
         case E_SEGMENTATION_FAULT:
             fprintf(stderr, "%s:%d error: Segmentation fault: Accessing memory outside the given memory of the program.\n\t\t~> function:%s\n", file, line, func);

@@ -75,7 +75,7 @@ void list_push_back(List* list, void* val) {
         Node* new_tail = malloc(sizeof(Node));
         new_tail->_val = val;
 
-        if (list->_tail == NULL) 
+        if (!list->_tail) 
         {
             list->_head = list->_tail = new_tail;
         } 
@@ -102,7 +102,7 @@ void list_push_back(List* list, void* val) {
 void list_pop_back(List* list) { 
     if (list)
     {
-        if (list->_tail != NULL)
+        if (list->_tail)
         {
             free(list->_tail);
             list->_tail = list->_tail->_prev;
@@ -117,7 +117,7 @@ void list_pop_back(List* list) {
         LOG(E_OBJECT_UNINITIALIZED);
 }
 /**
- * list_pop_back:
+ * list_insert:
  * @params: @list: pointer to list needed to modify.
  *          @val:  pointer to value to insert into the given list.
  *          @pos:  position to insert the value.
@@ -198,7 +198,7 @@ void list_erase(List* list, unsigned pos) {
         LOG(E_OBJECT_UNINITIALIZED);
 }
 /**
- * list_erase:
+ * list_clear:
  * @params: @list: pointer to list needed to modify.
  *
  * Traverses through the list recursively and frees the nodes
@@ -222,7 +222,18 @@ void list_clear(List* list) {
         LOG(E_OBJECT_UNINITIALIZED);
 }
 /**
- * list_erase:
+ * list_size:
+ * @params: @list: pointer to list needed to access properties.
+ * 
+ * Returns length of list.
+*/
+size_t list_size(List* list) {
+    if (!list)
+        LOG(E_OBJECT_UNINITIALIZED);
+    return list->_size;
+}
+/**
+ * list_empty:
  * @params: @list: pointer to list needed to access properties.
  *
  * Checks whether the list is empty and returns true or false.
@@ -233,19 +244,8 @@ unsigned list_empty(List* list) {
     return (list->_size == 0) ? 1: 0;
 }
 /**
- * list_size:
- * @params: @list: pointer to stack needed to access properties.
- * 
- * Returns length of list.
-*/
-size_t list_size(List* list) {
-    if (!list)
-        LOG(E_OBJECT_UNINITIALIZED);
-    return list->_size;
-}
-/**
  * list_front:
- * @params: @list: pointer to stack needed to access properties.
+ * @params: @list: pointer to list needed to access properties.
  * 
  * Returns the value at the front of the list.
 */
@@ -259,7 +259,7 @@ void* list_front(List* list) {
 }
 /**
  * list_back:
- * @params: @list: pointer to stack needed to access properties.
+ * @params: @list: pointer to list needed to access properties.
  * 
  * Returns the value at the back of the list.
 */
@@ -275,7 +275,7 @@ void* list_back(List* list) {
  * list_new:
  * 
  * Creates a list pointer and initializes its properties to 
- * default and returns it.
+ * zero's and returns it.
 */
 List* list_new() { 
     List* list = malloc(sizeof(List));
@@ -283,8 +283,7 @@ List* list_new() {
     if (!list)
         LOG(E_SEGMENTATION_FAULT);
 
-    list->_head = list->_tail = NULL;
-    list->_size = 0;
+    *list = (List) { 0 };
     return list;
 }
 /**

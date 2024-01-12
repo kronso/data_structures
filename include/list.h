@@ -1,9 +1,5 @@
 #pragma once
 #include <stdio.h>
-/**
- * Doubly-linked list
- * List is sequential and does not loop back to the head.
-*/
 
 /**
  * Node:
@@ -22,10 +18,12 @@ struct _Node {
  * @properties: @_head: always stores the address of the first node in the list. 
  *              @_tail: always stores the address of the last node in the list.  
  *              @_size: stores the length of list.  
+ * 
+ * Doubly-linked list
+ * List is sequential and does not loop back to the head.
 */       
 typedef struct List { 
-    Node*  _head;
-    Node*  _tail;
+    Node  *_head, *_tail;
     size_t _size;
 } List;
 
@@ -39,8 +37,8 @@ void list_erase      (List* list, unsigned pos);
 void list_clear      (List* list);
 
 /* Capacity */
-unsigned list_empty  (List* list);
 size_t list_size     (List* list);
+unsigned list_empty  (List* list);
 
 /* Element access */
 void* list_front     (List* list);

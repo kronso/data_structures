@@ -80,11 +80,13 @@ unsigned stack_empty(Stack* stack) {
 void* stack_top(Stack* stack) {
     if (!stack)
         LOG(E_OBJECT_UNINITIALIZED);
+    
+    if (stack_empty(stack))
+        LOG(E_SEGMENTATION_FAULT);
     return *(stack->_arr + stack->_size - 1);
 }
 /**
  * stack_new:
- * 
  * Creates a stack pointer and returns it.
  * The if statement is executed, the malloc function failed to...
  * allocate memory due to memory exhaustion - malloc not giving the desired space.
@@ -99,15 +101,11 @@ Stack* stack_new(void) {
     if (!stack)
         LOG(E_SEGMENTATION_FAULT);
 
-    *stack = (Stack) {
-        ._arr = NULL,
-        ._size = 0
-    };
+    *stack = (Stack) { 0 };
     return stack;
 }
 /**
  * stack_destroy:
- * 
  * @params: @stack: pointer to stack needed to access properties.
  * 
  * Deallocates given memory from heap to prevent memory leaks.
