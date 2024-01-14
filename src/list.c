@@ -17,7 +17,7 @@ void list_push_front(List* list, void* val) {
     if (list)
     {
         Node* new_head = malloc(sizeof(Node));
-        new_head->_val = val;
+        *new_head = (Node) { ._val = val };
 
         if (list->_head == NULL)
         {
@@ -47,20 +47,22 @@ void list_push_front(List* list, void* val) {
 void list_pop_front(List* list) {
     if (list)
     {
-        if (list->_head != NULL)
+        if (!list->_head->_next) 
         {
+            free(list->_head->_val);
+            free(list->_head);
+            list->_head = NULL;
+        }
+        else {
             list->_head = list->_head->_next;
+            free(list->_head->_prev->_val);
             free(list->_head->_prev);
             list->_head->_prev = NULL;
-
-            list->_size--;
         }
-        else 
-            LOG(E_SEGMENTATION_FAULT);
+        list->_size--;
     }
     else 
         LOG(E_OBJECT_UNINITIALIZED);
-
 }
 /**
  * list_push_back:
@@ -73,7 +75,7 @@ void list_push_back(List* list, void* val) {
     if (list)
     {
         Node* new_tail = malloc(sizeof(Node));
-        new_tail->_val = val;
+        *new_tail = (Node) { ._val = val };
 
         if (!list->_tail) 
         {
@@ -102,16 +104,20 @@ void list_push_back(List* list, void* val) {
 void list_pop_back(List* list) { 
     if (list)
     {
-        if (list->_tail)
+        if (!list->_tail->_prev)
         {
+            free(list->_tail->_val);
             free(list->_tail);
+            list->_tail = NULL;
+        } 
+        else
+        {
+            free(list->_tail->_val);
             list->_tail = list->_tail->_prev;
+            free(list->_tail->_next);
             list->_tail->_next = NULL;
-
-            list->_size--;
         }
-        else 
-            LOG(E_SEGMENTATION_FAULT);
+        list->_size--;
     }
     else 
         LOG(E_OBJECT_UNINITIALIZED);
@@ -190,6 +196,7 @@ void list_erase(List* list, unsigned pos) {
         }  
         node->_prev->_next = node->_next;
         node->_next->_prev = node->_prev;
+        free(node->_val);
         free(node);
 
         list->_size--;
@@ -206,11 +213,12 @@ void list_erase(List* list, unsigned pos) {
 */
 void list_clear(List* list) { 
     if (list)
-    {
-        if (list->_size != 0) 
+    {   
+        Node* node = list->_head;
+        if (!list_empty(list)) 
         {
-            Node* node = list->_head;
             list->_head = list->_head->_next;
+            free(node->_val);
             free(node);
             list->_size--;
 
@@ -292,8 +300,8 @@ List* list_new() {
  * Uses list_clear function to recursivly free the nodes
  * and then frees the given list.
 */
-void* list_destroy(List* list) {
+void list_destroy(List* list) {
     list_clear(list);
     free(list);
-    return NULL;
+    // list = NULL;
 }

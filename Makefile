@@ -30,8 +30,3 @@ clean:
 
 # main: main.c /usr/lib64/libdata.so
 # 	$(GCC) $(CFLAGS) -o main $< -ldata -L$(LIBDIR) -I$(INCDIR)
-
-
-
-
-

@@ -46,4 +46,4 @@ void* list_back      (List* list);
 
 /* Constructor and destructor */
 List* list_new       ();
-void* list_destroy   (List* list);
+void list_destroy   (List* list);
