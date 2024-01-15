@@ -3,18 +3,31 @@
 #include <string.h>
 
 #include "../include/hash_integral.h"
-
-/* Mid-square hash function for integral keys */
+/**
+ * hash_function:
+ * @params: @h_table: pointer to the hash table needed to access its props.
+ *          @key:     an integral value used to reference its corresponding value in the hash table. 
+ * 
+ * Uses the Mid-square hash function to get an index within the hash tables capacity.
+*/
 static uint_64 hash_function(HashTable* h_table, uint_64 key) { 
     return (key * key) % h_table->_capacity;
 }
+/**
+ * hash_int_search:
+ * @params: @h_table: pointer to the hash table needed to access its props.
+ *          @key:     an integral value used to reference its corresponding value in the hash table.
+ * 
+ * Traverses the bucket and determines whether a key exists.
+ * Returns the key or NULL. 
+*/
 IntegralEntry* hash_int_search(HashTable* h_table, uint_64 key) { 
     unsigned hash = hash_function(h_table, key);
 
     List* bucket_hash = h_table->_buckets[hash];
-    Node* temp = bucket_hash->_head; /* might need something to fix this since _head should be private*/
+    ListNode* temp = bucket_hash->_head; /* might need something to fix this since _head should be private*/
     // Probably need to replace this with an iterator. 
-    // Also I don't know how I can access the private properties of List and Node
+    // Also I don't know how I can access the private properties of List and ListNode
     IntegralEntry* entry;
     while (temp != NULL)
     {   
@@ -26,11 +39,20 @@ IntegralEntry* hash_int_search(HashTable* h_table, uint_64 key) {
     }
     return NULL;
 }
+/**
+ * hash_int_delete:
+ * @params: @h_table: pointer to the hash table needed to modify.
+ *          @key:     an integral value used to reference its corresponding value in the hash table.
+ * 
+ * Traverses the bucket and determines whether a key exists.
+ * If found, it is deleted from the bucket else displays that the key did not
+ * exist.
+*/
 void hash_int_delete(HashTable* h_table, uint_64 key) {
     unsigned hash = hash_function(h_table, key);
 
     List* bucket_hash = h_table->_buckets[hash];
-    Node* temp = bucket_hash->_head; 
+    ListNode* temp = bucket_hash->_head; 
     IntegralEntry* entry;
 
     int i = 0;
@@ -48,12 +70,21 @@ void hash_int_delete(HashTable* h_table, uint_64 key) {
     }
     printf("Key is undefined.\n");
 }
+/**
+ * hash_int_insert:
+ * @params: @h_table: pointer to the hash table needed to modify.
+ *          @key:     an integral value used to reference its corresponding value in the hash table.
+ *          @val:     the corresponding value to a key that is to be stored.
+ * 
+ * Stores a entry of the new key-value pair. If the user inserts an existing key with a
+ * different value, the key's value in the hash_table will be updated to the new one.  
+ * If the load factor exceeds the max load factor, we rehash.
+*/
 void hash_int_insert(HashTable* h_table, uint_64 key, void* val) { 
     unsigned hash = hash_function(h_table, key);
 
     List* bucket_hash = h_table->_buckets[hash];
 
-    /* Update the value if an already existing key is given. */ 
     IntegralEntry* dupe = hash_int_search(h_table, key);
     if (dupe != NULL) {
         dupe->_value = val; 
@@ -72,7 +103,15 @@ void hash_int_insert(HashTable* h_table, uint_64 key, void* val) {
         rehash_int(h_table);
     }
 }
-
+/**
+ * rehash_int:
+ * @params: @h_table: pointer to the hash table needed to modify.
+ * 
+ * Rehashing involves creating a new array of lists with a doubled capacity,
+ * traversing through the previous hash table and hashing the existing keys to the
+ * array of new buckets, alongside destroying the previous buckets.
+ * This is now the new hash table.
+*/
 void rehash_int(HashTable* h_table) {
     h_table->_capacity *= 2;
     List** new_buckets = malloc(sizeof(List *) * h_table->_capacity);
@@ -81,7 +120,7 @@ void rehash_int(HashTable* h_table) {
         new_buckets[i] = list_new();
 
     unsigned hash;
-    Node* bucket_head;
+    ListNode* bucket_head;
     IntegralEntry* entry;
     for (size_t j = 0; j < h_table->_capacity / 2; j++) 
     {

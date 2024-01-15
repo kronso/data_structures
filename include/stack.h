@@ -40,4 +40,4 @@ void* stack_top         (Stack* stack);
 
 /* Construct and destructor */
 Stack* stack_new        ();
-void* stack_destroy     (Stack* stack);
+void stack_destroy      (Stack* stack);

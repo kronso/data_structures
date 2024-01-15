@@ -7,11 +7,11 @@
  *              @_next: stores address of the next node.  
  *              @_prev: stores address of the previous node. 
 */              
-typedef struct _Node Node;
-struct _Node {
+typedef struct _ListNode ListNode;
+struct _ListNode {
     void* _val;
-    Node* _next;
-    Node* _prev;
+    ListNode* _next;
+    ListNode* _prev;
 };
 /**
  * List:
@@ -23,8 +23,8 @@ struct _Node {
  * List is sequential and does not loop back to the head.
 */       
 typedef struct List { 
-    Node  *_head, *_tail;
-    size_t _size;
+    ListNode  *_head, *_tail;
+    size_t     _size;
 } List;
 
 /* Modifiers */

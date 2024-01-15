@@ -16,7 +16,7 @@ void enqueue(Queue* queue, void* val) {
     {
         if (!queue->_front)
         {
-            queue->_front = malloc(sizeof(Node));
+            queue->_front = malloc(sizeof(QueueNode));
             queue->_front->_val = val;
             queue->_front->_next = NULL;
 
@@ -24,7 +24,7 @@ void enqueue(Queue* queue, void* val) {
         }
         else 
         {
-            Node* new_node = malloc(sizeof(Node));
+            QueueNode* new_node = malloc(sizeof(QueueNode));
             new_node->_val = val;
             queue->_back->_next = new_node;
             new_node->_next = NULL;
@@ -48,7 +48,7 @@ void deque(Queue* queue) {
     {
         if (!queue_empty(queue))
         {   
-            Node* temp = queue->_front;
+            QueueNode* temp = queue->_front;
             if (queue->_front->_next)
                 queue->_front = queue->_front->_next;
             free(temp);
@@ -130,19 +130,27 @@ Queue* queue_new(void) {
  * 
  * Iteratively free the nodes and then frees the given queue.
 */
-void* queue_destroy(Queue* queue) { 
+void queue_destroy(Queue* queue) { 
     if (!queue) 
         LOG(E_OBJECT_UNINITIALIZED);
         
-    Node* node = queue->_front;
-    while (node->_next)
+    QueueNode* node = queue->_front;
+    while (node)
     {
-        node = queue->_front;
-        
-        queue->_front = queue->_front->_next;
-        free(node);
+        if (node->_next == NULL)
+        {
+            free(node);
+            node = queue->_front = NULL;
+        }
+        else
+        {
+            queue->_front = queue->_front->_next;
+            free(node);
+            node = queue->_front;
+        }
         queue->_size--;
     }
+
     free(queue);
-    return NULL;
+    queue = NULL;
 }

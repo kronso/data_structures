@@ -111,8 +111,9 @@ Stack* stack_new(void) {
  * Deallocates given memory from heap to prevent memory leaks.
  * !NOTE - use this when finished with using the stack.
 */
-void* stack_destroy(Stack* stack) {
+void stack_destroy(Stack* stack) {
     free(stack->_arr);
+    stack->_arr = NULL;
     free(stack);
-    return NULL;
+    stack = NULL;
 }

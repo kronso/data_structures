@@ -3,19 +3,34 @@
 #include <string.h>
 
 #include "../include/hash_string.h"
-
+/**
+ * hash_function:
+ * @params: @h_table: pointer to the hash table needed to access its props.
+ *          @key:     a string used to reference its corresponding value in the hash table. 
+ * 
+ * Converts the key into an integral type by getting the equivalent ASCII
+ * char and using it with an algorithm to represent as an index called
+ * a hash. 
+*/
 static uint_64 hash_function(HashTable* h_table, const char* key) { 
     uint_64 sum = 0;
         for (size_t i = 0; i < strlen(key); i++)
             sum  = key[i] + (i * i);
     return sum % h_table->_capacity;
 }
-
+/**
+ * hash_str_search:
+ * @params: @h_table: pointer to the hash table needed to access its props.
+ *          @key:     a string used to reference its corresponding value in the hash table.
+ * 
+ * Traverses the bucket and determines whether a key exists.
+ * Returns the key or NULL. 
+*/
 StringEntry* hash_str_search(HashTable* h_table, const char* key) { 
     unsigned hash = hash_function(h_table, key);
 
     List* bucket_hash = h_table->_buckets[hash];
-    Node* temp = bucket_hash->_head; 
+    ListNode* temp = bucket_hash->_head; 
 
     StringEntry* entry;
     while (temp != NULL)
@@ -28,11 +43,20 @@ StringEntry* hash_str_search(HashTable* h_table, const char* key) {
     }
     return NULL;
 }
+/**
+ * hash_str_delete:
+ * @params: @h_table: pointer to the hash table needed to modify.
+ *          @key:     a string used to reference its corresponding value in the hash table.
+ * 
+ * Traverses the bucket and determines whether a key exists.
+ * If found, it is deleted from the bucket else displays that the key did not
+ * exist.
+*/
 void hash_str_delete(HashTable* h_table, const char* key) {
     unsigned hash = hash_function(h_table, key);
 
     List* bucket_hash = h_table->_buckets[hash];
-    Node* temp = bucket_hash->_head; 
+    ListNode* temp = bucket_hash->_head; 
     StringEntry* entry;
 
     int i = 0;
@@ -50,6 +74,16 @@ void hash_str_delete(HashTable* h_table, const char* key) {
     }
     printf("Key is undefined.\n");
 }
+/**
+ * hash_str_insert:
+ * @params: @h_table: pointer to the hash table needed to modify.
+ *          @key:     a string used to reference its corresponding value in the hash table.
+ *          @val:     the corresponding value to a key that is to be stored.
+ * 
+ * Stores a entry of the new key-value pair. If the user inserts an existing key with a
+ * different value, the key's value in the hash_table will be updated to the new one.  
+ * If the load factor exceeds the max load factor, we rehash.
+*/
 void hash_str_insert(HashTable* h_table, const char* key, void* val) { 
     unsigned hash = hash_function(h_table, key);
 
@@ -74,7 +108,15 @@ void hash_str_insert(HashTable* h_table, const char* key, void* val) {
         rehash_str(h_table);
     }
 }
-
+/**
+ * rehash_str:
+ * @params: @h_table: pointer to the hash table needed to modify.
+ * 
+ * Rehashing involves creating a new array of lists with a doubled capacity,
+ * traversing through the previous hash table and hashing the existing keys to the
+ * array of new buckets, alongside destroying the previous buckets.
+ * This is now the new hash table.
+*/
 void rehash_str(HashTable* h_table) {
     h_table->_capacity *= 2;
     List** new_buckets = malloc(sizeof(List *) * h_table->_capacity);
@@ -83,7 +125,7 @@ void rehash_str(HashTable* h_table) {
         new_buckets[i] = list_new();
 
     unsigned hash;
-    Node* bucket_head;
+    ListNode* bucket_head;
     StringEntry* entry;
     for (size_t j = 0; j < h_table->_capacity / 2; j++) 
     {

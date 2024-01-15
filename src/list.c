@@ -16,8 +16,8 @@
 void list_push_front(List* list, void* val) { 
     if (list)
     {
-        Node* new_head = malloc(sizeof(Node));
-        *new_head = (Node) { ._val = val };
+        ListNode* new_head = malloc(sizeof(ListNode));
+        *new_head = (ListNode) { ._val = val };
 
         if (list->_head == NULL)
         {
@@ -49,13 +49,11 @@ void list_pop_front(List* list) {
     {
         if (!list->_head->_next) 
         {
-            free(list->_head->_val);
             free(list->_head);
             list->_head = NULL;
         }
         else {
             list->_head = list->_head->_next;
-            free(list->_head->_prev->_val);
             free(list->_head->_prev);
             list->_head->_prev = NULL;
         }
@@ -74,8 +72,8 @@ void list_pop_front(List* list) {
 void list_push_back(List* list, void* val) { 
     if (list)
     {
-        Node* new_tail = malloc(sizeof(Node));
-        *new_tail = (Node) { ._val = val };
+        ListNode* new_tail = malloc(sizeof(ListNode));
+        *new_tail = (ListNode) { ._val = val };
 
         if (!list->_tail) 
         {
@@ -106,13 +104,11 @@ void list_pop_back(List* list) {
     {
         if (!list->_tail->_prev)
         {
-            free(list->_tail->_val);
             free(list->_tail);
             list->_tail = NULL;
         } 
         else
         {
-            free(list->_tail->_val);
             list->_tail = list->_tail->_prev;
             free(list->_tail->_next);
             list->_tail->_next = NULL;
@@ -143,13 +139,13 @@ void list_insert(List* list, void* val, unsigned pos) {
             return;
         }
 
-        Node* node = list->_head;
+        ListNode* node = list->_head;
         while (pos)
         {   
             --pos;
             node = node->_next;
         }  
-        Node* new_node = malloc(sizeof(Node));
+        ListNode* new_node = malloc(sizeof(ListNode));
         new_node->_val = val;
 
         new_node->_prev = node->_prev;
@@ -188,7 +184,7 @@ void list_erase(List* list, unsigned pos) {
             return;
         }
 
-        Node* node = list->_head;
+        ListNode* node = list->_head;
         while (pos)
         {   
             --pos;
@@ -196,7 +192,6 @@ void list_erase(List* list, unsigned pos) {
         }  
         node->_prev->_next = node->_next;
         node->_next->_prev = node->_prev;
-        free(node->_val);
         free(node);
 
         list->_size--;
@@ -214,11 +209,10 @@ void list_erase(List* list, unsigned pos) {
 void list_clear(List* list) { 
     if (list)
     {   
-        Node* node = list->_head;
+        ListNode* node = list->_head;
         if (!list_empty(list)) 
         {
             list->_head = list->_head->_next;
-            free(node->_val);
             free(node);
             list->_size--;
 
@@ -303,5 +297,5 @@ List* list_new() {
 void list_destroy(List* list) {
     list_clear(list);
     free(list);
-    // list = NULL;
+    list = NULL;
 }

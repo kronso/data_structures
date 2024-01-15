@@ -6,10 +6,10 @@
  * @properties: @_val:  stores any value that is addressed in memory. 
  *              @_next: stores address of the next node.  
 */
-typedef struct _Node Node;
-struct _Node {
+typedef struct _QueueNode QueueNode;
+struct _QueueNode {
     void* _val;
-    Node* _next;
+    QueueNode* _next;
 };
 /**
  * Queue:
@@ -20,7 +20,7 @@ struct _Node {
  * List kinda implementation of a queue. 
 */ 
 typedef struct _Queue { 
-    Node  *_front, *_back;
+    QueueNode  *_front, *_back;
     size_t _size;
 } Queue;
 
@@ -38,4 +38,4 @@ void* queue_back        (Queue* queue);
 
 /* Constructor and destructor */
 Queue* queue_new        (void);
-void* queue_destroy     (Queue* queue);
+void queue_destroy      (Queue* queue);
