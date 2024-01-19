@@ -1,4 +1,12 @@
-.vscode
+.*
 
 main
 main.c
+
+# created by (bear -- make) so cland
+:wa
+# doesn't throw include errors :) 
+compile_commands.json
+
+# valgrind stuff
+vgcore.*

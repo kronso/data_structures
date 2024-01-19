@@ -63,6 +63,13 @@ void hash_int_delete(HashTable* h_table, uint_64 key) {
         {
             list_erase(bucket_hash, i); 
             h_table->_size--;
+
+            double load_factor = (double) h_table->_size / h_table->_capacity;
+            if (load_factor <= MIN_LOAD_FACTOR)
+            {
+                rehash_int_min(h_table);
+            }
+            
             return;
         }
         i++;
@@ -100,7 +107,7 @@ void hash_int_insert(HashTable* h_table, uint_64 key, void* val) {
     double load_factor = (double) h_table->_size / h_table->_capacity;
     if (load_factor >= MAX_LOAD_FACTOR) 
     { 
-        rehash_int(h_table);
+        rehash_int_max(h_table);
     }
 }
 /**
@@ -112,7 +119,7 @@ void hash_int_insert(HashTable* h_table, uint_64 key, void* val) {
  * array of new buckets, alongside destroying the previous buckets.
  * This is now the new hash table.
 */
-void rehash_int(HashTable* h_table) {
+void rehash_int_max(HashTable* h_table) {
     h_table->_capacity *= 2;
     List** new_buckets = malloc(sizeof(List *) * h_table->_capacity);
 
@@ -145,6 +152,41 @@ void rehash_int(HashTable* h_table) {
         }
         list_destroy(h_table->_buckets[j]);
     }
+    free(h_table->_buckets);
+    h_table->_buckets = new_buckets;
+}
+void rehash_int_min(HashTable* h_table) {
+    h_table->_capacity /= 2;
+
+    List** new_buckets = malloc(sizeof(List *) * h_table->_capacity);
+    for (size_t i = 0; i < h_table->_capacity; i++)
+        new_buckets[i] = list_new();
+
+    unsigned hash;
+    ListNode* bucket_head;
+    IntegralEntry* entry;
+    for (size_t j = 0; j < h_table->_capacity * 2; j++) { 
+        if (!list_empty(h_table->_buckets[j])) 
+        { 
+            bucket_head = h_table->_buckets[j]->_head;    
+
+            while (bucket_head != NULL) 
+            {
+                entry = malloc(sizeof(IntegralEntry));
+
+                *entry = (IntegralEntry) {
+                    ._key   = ((IntegralEntry *) bucket_head->_val)->_key,
+                    ._value = ((IntegralEntry *) bucket_head->_val)->_value
+                };
+
+                hash = hash_function(h_table, entry->_key);
+                list_push_back(new_buckets[hash], entry);
+
+                bucket_head = bucket_head->_next;
+            }
+        }
+        list_destroy(h_table->_buckets[j]); 
+    }    
     free(h_table->_buckets);
     h_table->_buckets = new_buckets;
 }

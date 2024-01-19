@@ -11,5 +11,5 @@ StringEntry* hash_str_search    (HashTable* h_table, const char* key);
 void hash_str_delete            (HashTable* h_table, const char* key);
 void hash_str_insert            (HashTable* h_table, const char* key, void* val);
 
-void rehash_str(HashTable* h_table);
-
+void rehash_str_max(HashTable* h_table);
+void rehash_str_min(HashTable* h_table);

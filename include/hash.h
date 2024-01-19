@@ -19,7 +19,8 @@ typedef struct _HashTable {
 #define HASH_CAPACITY 8
 // The threshold the ratio of size and capacity musn't exceed.
 #define MAX_LOAD_FACTOR 0.75
-
+// The minimum threshold the size of capaity exceeds to decrease its size.
+#define MIN_LOAD_FACTOR 0.125
 typedef unsigned long long uint_64;
 
 /* Constructor and destructor */
