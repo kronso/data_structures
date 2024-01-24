@@ -6,12 +6,15 @@ struct _BSTree {
     BSTree *_left, *_right;
 };
 
+void bstree_inorder(BSTree* tree);
+void bstree_preorder(BSTree* tree);
+void bstree_postorder(BSTree* tree);
 
-BSTree* bstree_search   (BSTree* tree, void* value);
 void bstree_insert      (BSTree* tree, void* value);
 void bstree_delete      (BSTree* tree, void* value);
-void bstree_traverse    (BSTree* tree);
-
+BSTree* bstree_search   (BSTree* tree, void* value);
 BSTree* bstree_parent   (BSTree* tree, void* value);
+void bstree_rebalance   (BSTree** tree);
+
 BSTree* bstree_new      (void* value);
 void bstree_destroy     (BSTree* tree);

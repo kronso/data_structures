@@ -2,16 +2,34 @@
 #include <stdio.h>
 
 #include "../include/bs_tree.h"
+#include "../include/vector.h"
 
 // inorder traversal
-void bstree_traverse(BSTree* bstree) {
+void bstree_inorder(BSTree* bstree) {
     if (bstree) 
     {
-        bstree_traverse(bstree->_left);
+        bstree_inorder(bstree->_left);
         printf("%d ", *(int *)bstree->_val);
-        bstree_traverse(bstree->_right);
+        bstree_inorder(bstree->_right);
     }
 }
+void bstree_postorder(BSTree* bstree) {
+    if (bstree) 
+    {
+        bstree_postorder(bstree->_left);
+        bstree_postorder(bstree->_right);
+        printf("%d ", *(int *)bstree->_val);
+    }
+}
+void bstree_preorder(BSTree* bstree) {
+    if (bstree) 
+    {
+        printf("%d ", *(int *)bstree->_val);
+        bstree_preorder(bstree->_left);
+        bstree_preorder(bstree->_right);
+    }
+}
+
 BSTree* bstree_search(BSTree* tree, void* value) {
 
     while (tree)
@@ -133,6 +151,37 @@ void bstree_delete(BSTree* tree, void* value) {
             tree = NULL;
         }
     }
+}
+// in-order to store the nodes sorted.
+void _bstree_store_nodes(BSTree* tree, Vector* vec) {
+    if (tree) {
+        _bstree_store_nodes(tree->_left, vec);
+        vec_push_back(vec, tree);
+        _bstree_store_nodes(tree->_right,vec);
+    }
+}
+BSTree* _bstree_rebalance(Vector* vec, int start, int end) {
+    if (start > end) 
+        return NULL;
+
+    int middle = (start + end) / 2;
+
+    BSTree* old_node = vec_at(vec, middle);
+    BSTree* new_tree = bstree_new(old_node->_val);
+
+    new_tree->_left  = _bstree_rebalance(vec, start, middle - 1);
+    new_tree->_right = _bstree_rebalance(vec, middle + 1, end);
+    return new_tree;
+}
+void bstree_rebalance(BSTree** tree) {
+    Vector* nodes = vec_new();
+    _bstree_store_nodes(*tree, nodes);
+
+    BSTree* new_tree = _bstree_rebalance(nodes, 0, vec_size(nodes) - 1);
+    vec_destroy(nodes);
+    bstree_destroy(*tree);
+
+    *tree = new_tree;
 }
 BSTree* bstree_new(void* value) {
     BSTree* tree = malloc(sizeof(BSTree));
