@@ -1,6 +1,6 @@
 GCC = gcc
 CFLAGS = -Wall -g
-
+ 
 INCDIR   = $(PWD)/include
 LIBDIR   = $(PWD)/lib
 SRCDIR   = $(PWD)/src
@@ -13,10 +13,10 @@ all: main
 # Stores .so in lib folder and access from there using,
 # -Wl,-rpath,$(LIBDIR)
 $(LIBDIR)/libdata.so: $(CFILES) $(HFILES) 
-	$(GCC) $(CFLAGS) -shared -fPIC -o $@ $^
+	@$(GCC) $(CFLAGS) -shared -fPIC -o $@ $^
 
 main: main.c $(LIBDIR)/libdata.so
-	$(GCC) $(CFLAGS) -o main $< -ldata -Wl,-rpath,$(LIBDIR) -L$(LIBDIR) -I$(INCDIR)
+	@$(GCC) $(CFLAGS) -o main $< -ldata -Wl,-rpath,$(LIBDIR) -L$(LIBDIR) -I$(INCDIR)
 
 clean:
 	rm main
