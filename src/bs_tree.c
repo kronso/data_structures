@@ -183,6 +183,36 @@ void bstree_rebalance(BSTree** tree) {
 
     *tree = new_tree;
 }
+
+size_t _bstree_nodes(BSTree* tree, size_t* count) {
+    if (tree) {
+       (*count)++;
+       _bstree_nodes(tree->_left, count);
+       _bstree_nodes(tree->_right, count);
+    }
+}
+size_t bstree_node_count(BSTree* tree) {
+    size_t node_count = 0;
+    _bstree_nodes(tree, &node_count);
+    return node_count;
+}
+unsigned _bstree_depth(BSTree* tree) {
+    if (tree) {
+        unsigned depth_left  = _bstree_depth(tree->_left);
+        unsigned depth_right = _bstree_depth(tree->_right);
+
+        if (depth_left > depth_right)
+            return depth_left + 1;
+        else
+            return depth_right + 1;
+    }
+    return 0;
+}
+unsigned bstree_depth(BSTree* tree) {
+    unsigned max_depth = _bstree_depth(tree);
+    return max_depth - 1;
+}
+
 BSTree* bstree_new(void* value) {
     BSTree* tree = malloc(sizeof(BSTree));
     *tree = (BSTree) {

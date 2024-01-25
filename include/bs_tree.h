@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdio.h>
+
 typedef struct _BSTree BSTree;
 struct _BSTree {
     void* _val;
@@ -15,6 +17,9 @@ void bstree_delete      (BSTree* tree, void* value);
 BSTree* bstree_search   (BSTree* tree, void* value);
 BSTree* bstree_parent   (BSTree* tree, void* value);
 void bstree_rebalance   (BSTree** tree);
+
+unsigned bstree_depth   (BSTree* tree);
+size_t bstree_node_count(BSTree* tree);
 
 BSTree* bstree_new      (void* value);
 void bstree_destroy     (BSTree* tree);
