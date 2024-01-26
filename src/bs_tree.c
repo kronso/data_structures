@@ -31,7 +31,6 @@ void bstree_preorder(BSTree* bstree) {
 }
 
 BSTree* bstree_search(BSTree* tree, void* value) {
-
     while (tree)
     {
         if (value < tree->_val) 
