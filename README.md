@@ -1,7 +1,7 @@
 # data_structus
 
 Library with data structures for linux
-``` console
+``` Makefile
 CC = gcc
 CFLAGS = -g -Werror -Wextra
 
