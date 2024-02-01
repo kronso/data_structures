@@ -16,7 +16,7 @@ $(LIBDIR)/libdata.so: $(CFILES) $(HFILES)
 	@$(GCC) $(CFLAGS) -shared -fPIC -o $@ $^
 
 main: main.c $(LIBDIR)/libdata.so
-	@$(GCC) $(CFLAGS) -o main $< -ldata -Wl,-rpath,$(LIBDIR) -L$(LIBDIR) -I$(INCDIR)
+	@$(GCC) $(CFLAGS) -o $@ $< -ldata -Wl,-rpath,$(LIBDIR) -L$(LIBDIR) -I$(INCDIR)
 
 clean:
 	rm main

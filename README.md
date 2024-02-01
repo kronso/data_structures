@@ -2,8 +2,16 @@
 
 Library with data structures for linux
 ``` console
+CC = gcc
+CFLAGS = -g -Werror -Wextra
+
+LIBDIR = PATH TO data_structures/lib
+INCDIR = PATH TO data_structures/include
+
+all: main
+
 main: main.c $(LIBDIR)/libdata.so
-	@$(GCC) $(CFLAGS) -o main $< -ldata -Wl,-rpath,$(LIBDIR) -L$(LIBDIR) -I$(INCDIR)
+	$(CC) -o $@ $< -ldata -Wl,-rpath,$(LIBDIR) -L$(LIBDIR) -I$(INCDIR)
 ```
 
 *AVL trees don't work :(*
