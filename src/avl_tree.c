@@ -48,18 +48,6 @@ void LL_rotation(struct _avl_parents parent) {
     parent.top->_val = parent.top->_right->_val;
     parent.top->_right->_val = val;
 }
-void LL_rotation_extra(struct _avl_parents parent) {
-    AVLTree* top_right = parent.top->_right;
-    parent.top->_left  = parent.mid->_left;
-    parent.top->_right = parent.mid;
-
-    parent.top->_right->_left  = parent.mid->_right;
-    parent.top->_right->_right = top_right;
-
-    int val = parent.top->_val;
-    parent.top->_val = parent.top->_right->_val;
-    parent.top->_right->_val = val;
-}
 void RR_rotation(struct _avl_parents parent) {
     parent.top->_right  = parent.mid->_right;
     parent.top->_left = parent.mid;
@@ -69,19 +57,6 @@ void RR_rotation(struct _avl_parents parent) {
     parent.top->_val = parent.top->_left->_val;
     parent.top->_left->_val = val; 
 }
-void RR_rotation_extra(struct _avl_parents parent) {
-    AVLTree* top_left = parent.top->_left;
-    parent.top->_right  = parent.mid->_right;
-    parent.top->_left = parent.mid;
-
-    parent.top->_left->_right  = parent.mid->_left;
-    parent.top->_left->_left = top_left;
-
-    int val = parent.top->_val;
-    parent.top->_val = parent.top->_left->_val;
-    parent.top->_left->_val = val;
-}
-
 void LR_rotation(struct _avl_parents parent) {
     int val = parent.top->_val;
     parent.top->_val = parent.mid->_right->_val;
@@ -96,19 +71,43 @@ void RL_rotation(struct _avl_parents parent) {
     parent.mid->_left = NULL;
     parent.top->_left = avl_new(val);
 }
+
+void LL_rotation_extra(struct _avl_parents parent) {
+    AVLTree* top_right = parent.top->_right;
+    parent.top->_left  = parent.mid->_left;
+    parent.top->_right = parent.mid;
+
+    parent.top->_right->_left  = parent.mid->_right;
+    parent.top->_right->_right = top_right;
+
+    int val = parent.top->_val;
+    parent.top->_val = parent.top->_right->_val;
+    parent.top->_right->_val = val;
+}
+void RR_rotation_extra(struct _avl_parents parent) {
+    AVLTree* top_left = parent.top->_left;
+    parent.top->_right  = parent.mid->_right;
+    parent.top->_left = parent.mid;
+
+    parent.top->_left->_right  = parent.mid->_left;
+    parent.top->_left->_left = top_left;
+
+    int val = parent.top->_val;
+    parent.top->_val = parent.top->_left->_val;
+    parent.top->_left->_val = val;
+}
 void RL_rotation_extra(struct _avl_parents parent) {
-    int val;
     AVLTree* top_left = parent.top->_right;
+    int top_val = parent.top->_val;
+
     parent.top->_left = parent.mid->_left;
 
     parent.top->_right = parent.mid;
     parent.top->_right->_left = parent.mid->_right;
-
     parent.top->_right->_right = top_left;
 
-    val = parent.top->_val;
     parent.top->_val = parent.mid->_val;
-    parent.mid->_val = val;
+    parent.mid->_val = top_val;
     // int val;
     // AVLTree* top_left = parent.top->_left;
     // parent.top->_right = parent.mid->_right;
@@ -164,22 +163,16 @@ unsigned height(AVLTree* tree) {
 void avl_rotation(AVLTree* bottom_node, struct _avl_parents parent, int bf) {
     if (bf == 2)
     {
-        if (parent.mid->_right && parent.mid->_left)
-            LR_rotation_extra(parent);
-        //else if (bottom_node == parent.mid->_left && parent.mid->_right)
-        //    LL_rotation_extra(parent);
-        else if (parent.mid->_left)
+
+        if (parent.mid->_left)
             LL_rotation(parent);
         else if (parent.mid->_right)
             LR_rotation(parent);
     }
     else if (bf == -2)
     {
-        if (parent.mid->_left && parent.mid->_right) 
-            RL_rotation_extra(parent);
-        //else if (bottom_node == parent.mid->_right && parent.mid->_left)
-        //    RR_rotation_extra(parent);
-        else if (parent.mid->_right)
+
+        if (parent.mid->_right)
             RR_rotation(parent);
         else if (parent.mid->_left)
             RL_rotation(parent);
@@ -213,7 +206,7 @@ void wrapper(AVLTree* tree, AVLTree* bottom_node) {
     int balance_factor = 0;
 
     struct _avl_parents parent = { 0 };
-    
+
     traverse(tree, &parent, h_left, h_right, balance_factor, bottom_node);
 }
 

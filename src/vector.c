@@ -27,6 +27,9 @@ void vec_insert(Vector* vector, void* val, unsigned pos) {
     vector->_size++;
     *(vector->_arr + pos) = val;
 }
+void vec_assign(Vector* vector, void* val, unsigned pos) {
+    *(vector->_arr + pos) = val;
+}
 
 void vec_erase(Vector* vector, unsigned pos) {
 

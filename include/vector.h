@@ -12,6 +12,7 @@ typedef struct _Vector {
 void vec_push_back  (Vector* vector, void* val);
 void vec_pop_back   (Vector* vector);
 void vec_insert     (Vector* vector, void* val, unsigned pos);
+void vec_assign     (Vector* vector, void* val, unsigned pos);
 void vec_erase      (Vector* vector, unsigned pos);
 void vec_clear      (Vector* vector);
 
